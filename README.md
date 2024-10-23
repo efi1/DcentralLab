@@ -1,4 +1,4 @@
-# pythonMProject
+# DcentralLab
 
 The goal of this assignment (project) is to write a Python script that automates tasks on Bitbucket, covering both UI testing
 using Selenium and API testing using the Bitbucket REST API.
