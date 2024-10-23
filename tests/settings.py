@@ -1,0 +1,7 @@
+cfg_template_dir = "config/cfg_tests"
+cfg_global_dir = "config/global_cfg"
+cfg_global_fn = "global_config.cfg"
+root_url = "https://staging.tokensfarm.com/create#/staking"
+drivers_dir_name = "drivers"
+browser_config = "test_config.json"
+browser_definitions = "browser_definitions.yaml"

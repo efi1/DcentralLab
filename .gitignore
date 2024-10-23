@@ -1,0 +1,15 @@
+.idea
+.idea/*
+.pytest_cache
+.venv/
+.venv
+dist/
+dist
+build/
+build
+tests/DcentralLab.egg-info
+tests/DcentralLab.egg-info/
+logs
+./logfile.log
+logs/logfile.log
+tests/drivers
