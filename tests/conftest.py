@@ -30,16 +30,21 @@ def json_load(path: str) -> json:
     return json.loads(data)
 
 
+@pytest.fixture
+def global_data(file=GLOBAL_CONFIG_FILE):
+    return json_load(file)
+
+
+@pytest.fixture
+def root_url(global_data):
+    return global_data.get('url')
+
+
 def get_cfg_template(test_name, cfg_template_dir):
     template_loader = FileSystemLoader(searchpath=cfg_template_dir)
     template_env = Environment(loader=template_loader)
     template = template_env.get_template(f'{test_name}.cfg')
     return template
-
-
-@pytest.fixture
-def global_data(file=GLOBAL_CONFIG_FILE):
-    return json_load(file)
 
 
 @pytest.fixture

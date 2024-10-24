@@ -1,50 +1,27 @@
 from selenium.webdriver.common.by import By
+from collections import namedtuple
+
+Locator = namedtuple('locator', ['by', 'value'])
 
 
-class AboutPageLocators:
-    PageHeader = (By.NAME, 'about_title')
+class ListboxLocators:
+    @property
+    def open_listbox(self):
+        s = Locator(By.ID, "farm-chain")
+        return Locator(By.ID, "farm-chain")
 
+    @property
+    def get_listbox_css(self):
+        return Locator(By.CSS_SELECTOR, "[id^='react-select-2-option']")
 
-class DeliveryPageLocators:
-    PageHeader = (By.NAME, 'delivery_title')
-    AboutPageLink = (By.LINK_TEXT, 'About company')
+    @property
+    def get_listbox_xpath(self):
+        return Locator(By.XPATH, "//div[@id='react-select-2-listbox']")
 
-
-class FavoritesPageLocators:
-    @staticmethod
-    def product_link(product_id):
-        return By.XPATH, f'//*[@id="product{product_id}"]/h5/a'
-
-    REMOVE = (By.NAME, 'remove')
+    @property
+    def get_selected_item(self):
+        return Locator(By.CLASS_NAME, 'network-label')
 
 
 class MainPageLocators:
-    CITY = (By.ID, 'select')
-    COMPARISON = (By.NAME, 'comparison')
-    SEARCH = (By.ID, 'search_product')
-    CART = (By.NAME, 'goToBasket')
-    FAVORITES = (By.NAME, 'favorites')
-    SELECT_MENU = (By.ID, 'goToSelection')
-    SELECT_MENU_CAR_BATTERIES = (By.ID, 'carBatteries')
-    PageHeader = (By.ID, 'main_title')
-    DeliveryPageLink = (By.LINK_TEXT, 'Payment and delivery')
-
-    @staticmethod
-    def add_to_cart(product_id):
-        return By.XPATH, f'//*[@id="product{product_id}"]/div[3]/button[1]'
-
-    @staticmethod
-    def add_to_comparison(product_id):
-        return (By.XPATH, f'//*[@id="product{product_id}"]/div[3]/button[2]')
-
-    @staticmethod
-    def add_to_favorites(product_id):
-        return (By.XPATH, f'//*[@id="product{product_id}"]/div[3]/button[3]')
-
-    @staticmethod
-    def product_link(product_id):
-        return (By.XPATH, f'//*[@id="product{product_id}"]/h5/a')
-
-    @staticmethod
-    def product_by_id(id):
-        return (By.ID, f'product{id}')
+    pass

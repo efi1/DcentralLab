@@ -1,50 +1,28 @@
 from tests.pages.base_page import BasePage
-from tests.pages.delivery_page import DeliveryPage
-from tests.pages.favorites_page import FavoritesPage
-from tests.utils.locators import MainPageLocators as Locators
+from tests.utils.locators import *
+from selenium.webdriver.common.keys import Keys
 
 
 class MainPage(BasePage):
 
     @staticmethod
-    def navigate(driver):
-        page = MainPage(driver)
+    def navigate(driver, url):
+        page = MainPage(driver, url)
         page.navigate_to()
         return page
 
-    def get_header(self):
-        return self.find_element(Locators.PageHeader).text
+    def select_from_chains_dropdown(self, chain_name: str) -> str:
+        """
+        select a chain for a farm's token
+        :param chain_name: required chain
+        :return: selected chain
+        """
+        ele = self.find_element((By.TAG_NAME, "html"), expected_condition='presence')
+        ele.send_keys(Keys.END)
+        locators = ListboxLocators()
+        self.open_listbox(locators.open_listbox)
+        listbox = self.get_listbox(locators.open_listbox, locators.get_listbox_css)
+        self.select_item_listbox(listbox, chain_name)
+        selected_item = self.find_element(locators.get_selected_item).text
+        return selected_item
 
-    def search_for(self, txt):
-        self.enter_txt(Locators.SEARCH, txt)
-        self.wait_until_visibility_of_element_located(Locators.product_by_id(1))
-        return self
-
-    def go_to_car_batteries(self):
-        self.click_on(Locators.SELECT_MENU)
-        self.click_on(Locators.SELECT_MENU_CAR_BATTERIES)
-        return self
-
-    def add_to_favorites(self, product_id):
-        self.click_on(Locators.add_to_favorites(product_id))
-        return self
-
-    def add_to_cart(self, product_id):
-        self.click_on(Locators.add_to_cart(product_id))
-        return self
-
-    def add_to_comparison(self, product_id):
-        self.click_on(Locators.add_to_comparison(product_id))
-        return self
-
-    def go_to_favorites(self):
-        self.click_on(Locators.FAVORITES)
-        return FavoritesPage(self.driver)
-
-    def go_to_delivery(self):
-        self.click_on(Locators.DeliveryPageLink)
-        self.driver.switch_to.window(self.driver.window_handles[-1])
-        return DeliveryPage(self.driver)
-
-    def get_product_name(self, product_id):
-        return self.find_element(Locators.product_link(product_id)).text
