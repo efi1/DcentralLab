@@ -1,7 +1,5 @@
 from selenium.webdriver.common.by import By
-from collections import namedtuple
-
-Locator = namedtuple('locator', ['by', 'value'])
+from tests.utils.locator import Locator
 
 
 class ListboxLocators:

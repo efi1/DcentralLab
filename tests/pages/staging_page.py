@@ -15,7 +15,7 @@ class StagingPage(BasePage, ListboxLocators):
     def suppress_container_message(func):
         def wrapper(self, *args, **kwargs):
             try:
-                is_container = self.find_element(self.locators.is_container_message, timeout_sec=1,
+                is_container = self.find_element(self.locators.is_container_message, timeout_sec=2,
                                                  expected_condition='clickable')
                 is_container.click()
             except (EC.StaleElementReferenceException, TimeoutException) as e:

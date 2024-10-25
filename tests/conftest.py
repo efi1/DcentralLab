@@ -5,6 +5,7 @@ import pytest as pytest
 import yaml
 from selenium import webdriver
 from jinja2 import Environment, FileSystemLoader
+from tests.utils.dict_to_obj import dict_to_obj
 from tests.config.global_cfg.browser_definitions import *
 
 DRIVERS_DIR = Path().absolute().joinpath('drivers')
@@ -63,7 +64,8 @@ def test_config(test_name: str, global_data: dict) -> dict:
     else:
         return {}
     yaml_data = test_template.render(global_data)
-    return yaml.safe_load(yaml_data)
+    dict_data = yaml.safe_load(yaml_data)
+    return dict_to_obj(dict_data)
 
 
 @pytest.fixture(scope="module")
