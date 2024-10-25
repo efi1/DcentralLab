@@ -36,11 +36,6 @@ def global_data(file=GLOBAL_CONFIG_FILE):
     return json_load(file)
 
 
-# @pytest.fixture(scope="session")
-# def url(global_data):
-#     return global_data.get('url')
-
-
 def get_cfg_template(test_name, cfg_template_dir):
     template_loader = FileSystemLoader(searchpath=cfg_template_dir)
     template_env = Environment(loader=template_loader)
