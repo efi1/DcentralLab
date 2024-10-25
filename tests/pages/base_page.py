@@ -38,7 +38,7 @@ class BasePage(object):
 
     def navigate_to(self, url='', is_displayed_locator=None):
         for uri in self.base_url:
-            uri += url
+            uri = F"{uri}/{url}" if url else uri
             try:
                 self.driver.get(uri)
                 if is_displayed_locator:

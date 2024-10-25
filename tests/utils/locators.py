@@ -29,5 +29,16 @@ class ListboxLocators:
         return Locator(By.XPATH, "//span[@class='web3-wc_modal-icon-btn web3-wc_close-modal-btn']")
 
 
+class HordLocators:
+
+    @property
+    def sidebar(self):
+        return Locator(By.XPATH, "//div[@class='passed-content-wrapper']/div[@class='sidebar-toggle-wrapper']")
+
+    @property
+    def sidebar_verification(self):
+        return Locator(By.XPATH, "//*[contains(@class, 'expanded')]")
+
+
 class MainPageLocators:
     go_bottom = Locator(By.TAG_NAME, "html")

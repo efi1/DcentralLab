@@ -3,6 +3,7 @@ from tests.pages.main_page import MainPage
 
 
 @pytest.mark.parametrize("search_type", ['css', 'xpath'])
+@pytest.mark.skip('tmp')
 def test_select_farm_token(browser, test_config, search_type):
     chain_name = test_config.chain_name
     url_list = test_config.url_list

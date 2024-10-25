@@ -18,8 +18,8 @@ class MainPage(BasePage):
     def go_to_staging(self, url, search_type=None):
         return StagingPage(self.driver, url, search_type)
 
-    def go_to_hord(self, url, search_type=None):
-        return HordPage(self.driver, url, search_type)
+    def go_to_hord(self, url):
+        return HordPage(self.driver, url)
 
     @property
     def go_bottom(self):
