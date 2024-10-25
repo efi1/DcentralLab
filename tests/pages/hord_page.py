@@ -1,4 +1,4 @@
-from selenium.common import TimeoutException
+from selenium.common import TimeoutException, WebDriverException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from tests.pages.base_page import BasePage
@@ -28,5 +28,28 @@ class HordPage(BasePage, HordLocators):
             return True
         except TimeoutException:
             return False
+
+    @property
+    def get_faq_items(self):
+        faq_items = self.find_elements(self.locators.faq_wrapper, expected_condition='visibility')
+        return faq_items
+
+    @classmethod
+    def verify_faq_titles(cls, faq_items):
+        items_text = [item.text for item in faq_items]
+        return items_text
+
+    @classmethod
+    def verify_faq_links(cls, faq_items):
+        desc = []
+        for item in faq_items:
+            try:
+                item.click()
+            except WebDriverException:
+                print(F"faq link is not clickable")
+                return False, []
+            desc.append(item.find_element(By.XPATH, "//*[@class='parent-content']/article/span").text)
+        return True, desc
+
 
 

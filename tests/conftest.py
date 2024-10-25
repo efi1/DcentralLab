@@ -32,8 +32,13 @@ def json_load(path: str) -> json:
 
 
 @pytest.fixture(scope="session")
-def global_data(file=GLOBAL_CONFIG_FILE):
+def global_dict_data(file=GLOBAL_CONFIG_FILE):
     return json_load(file)
+
+
+@pytest.fixture(scope="session")
+def global_data(global_dict_data):
+    return dict_to_obj(global_dict_data)
 
 
 def get_cfg_template(test_name, cfg_template_dir):
@@ -44,7 +49,7 @@ def get_cfg_template(test_name, cfg_template_dir):
 
 
 @pytest.fixture(scope="function")
-def test_config(test_name: str, global_data: dict) -> dict:
+def test_config(test_name: str, global_dict_data: dict) -> dict:
     """
     updates test's data with the global_cfg data
     :param test_name: test name
@@ -58,28 +63,28 @@ def test_config(test_name: str, global_data: dict) -> dict:
         test_template = get_cfg_template(test_name, TEMPLATE_DIR)
     else:
         return {}
-    yaml_data = test_template.render(global_data)
+    yaml_data = test_template.render(global_dict_data)
     dict_data = yaml.safe_load(yaml_data)
     return dict_to_obj(dict_data)
 
 
 @pytest.fixture(scope="module")
-def browser_config(global_data):
-    browser_config_fn = global_data.get('browser_config')
+def browser_config(global_dict_data):
+    browser_config_fn = global_dict_data.get('browser_config')
     browser_template = get_cfg_template(browser_config_fn, GLOBAL_DIRECTORY)
-    yaml_data = browser_template.render(global_data)
-    return yaml.safe_load(yaml_data)
+    yaml_data = browser_template.render(global_dict_data)
+    return dict_to_obj(yaml.safe_load(yaml_data))
 
 
 def set_options(opts, browser_config):
-    if browser_config['mode'] == 'Headless':
+    if browser_config.mode == 'Headless':
         opts.add_argument('--headless=new')
         opts.add_argument('ignore-certificate-errors')
-    elif browser_config['mode'] == 'Silent':
+    elif browser_config.mode == 'Silent':
         opts.add_argument('--silent=new')
-    elif browser_config['window_size'] == 'Maximized':
+    elif browser_config.window_size == 'Maximized':
         opts.add_argument('--start-maximized=new')
-    opts.page_load_strategy = browser_config['page_load_strategy']
+    opts.page_load_strategy = browser_config.page_load_strategy
 
 
 def get_webdriver(config: dict, b_type: str) -> object:
@@ -107,12 +112,12 @@ def get_webdriver(config: dict, b_type: str) -> object:
 
 @pytest.fixture(scope="module")
 def browser(request, browser_config):
-    b_type = browser_config['browser']
+    b_type = browser_config.browser
     if b_type in ['Firefox', 'Chrome', 'Edge']:
         driver = get_webdriver(browser_config, b_type)
     else:
         raise Exception(f'Unknown type of browser')
-    driver.implicitly_wait(browser_config['implicit_wait'])
+    driver.implicitly_wait(browser_config.implicit_wait)
     yield driver
     driver.quit()
 

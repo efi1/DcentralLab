@@ -39,6 +39,10 @@ class HordLocators:
     def sidebar_verification(self):
         return Locator(By.XPATH, "//*[contains(@class, 'expanded')]")
 
+    @property
+    def faq_wrapper(self):
+        return Locator(By.CLASS_NAME, "faq-question-wrapper")
+
 
 class MainPageLocators:
     go_bottom = Locator(By.TAG_NAME, "html")
