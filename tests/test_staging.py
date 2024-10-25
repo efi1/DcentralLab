@@ -1,9 +1,18 @@
+import pytest
 from tests.pages.main_page import MainPage
 
 
-def test_select_farm_token(browser, root_url, load_test_config):
-    chain_name = load_test_config['test_staging']['chain_name']
-    main_page = MainPage.navigate(browser, root_url)
-    selected_item = main_page.select_from_chains_dropdown(chain_name)
+@pytest.mark.parametrize("search_type", ['css', 'xpath'])
+def test_select_farm_token(browser, test_config, search_type):
+    chain_name = test_config['chain_name']
+    url_list = test_config['url_list']
+    main_page = MainPage(browser, url_list)
+    staging = main_page.go_to_staging(url_list, search_type)
+    main_page.navigate_to(is_displayed_locator=staging.locators.is_displayed)
+    main_page.go_bottom
+    staging.open_listbox
+    listbox = staging.get_listbox()
+    staging.select_item_listbox(listbox, chain_name)
+    selected_item = staging.get_selected_item
     assert selected_item == chain_name, F"item wrongly selected; {selected_item} instead of {chain_name}"
 

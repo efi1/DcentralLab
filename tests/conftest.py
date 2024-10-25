@@ -30,14 +30,14 @@ def json_load(path: str) -> json:
     return json.loads(data)
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def global_data(file=GLOBAL_CONFIG_FILE):
     return json_load(file)
 
 
-@pytest.fixture
-def root_url(global_data):
-    return global_data.get('url')
+# @pytest.fixture(scope="session")
+# def url(global_data):
+#     return global_data.get('url')
 
 
 def get_cfg_template(test_name, cfg_template_dir):
@@ -47,8 +47,8 @@ def get_cfg_template(test_name, cfg_template_dir):
     return template
 
 
-@pytest.fixture
-def load_test_config(test_name: str, global_data: dict) -> object:
+@pytest.fixture(scope="function")
+def test_config(test_name: str, global_data: dict) -> dict:
     """
     updates test's data with the global_cfg data
     :param test_name: test name
@@ -61,12 +61,12 @@ def load_test_config(test_name: str, global_data: dict) -> object:
     if cfg_template_file.exists():
         test_template = get_cfg_template(test_name, TEMPLATE_DIR)
     else:
-        test_template = {}
+        return {}
     yaml_data = test_template.render(global_data)
     return yaml.safe_load(yaml_data)
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def browser_config(global_data):
     browser_config_fn = global_data.get('browser_config')
     browser_template = get_cfg_template(browser_config_fn, GLOBAL_DIRECTORY)
@@ -108,7 +108,7 @@ def get_webdriver(config: dict, b_type: str) -> object:
     return driver
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def browser(request, browser_config):
     b_type = browser_config['browser']
     if b_type in ['Firefox', 'Chrome', 'Edge']:

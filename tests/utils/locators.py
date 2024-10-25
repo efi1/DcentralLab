@@ -5,23 +5,31 @@ Locator = namedtuple('locator', ['by', 'value'])
 
 
 class ListboxLocators:
+
     @property
-    def open_listbox(self):
-        s = Locator(By.ID, "farm-chain")
+    def is_displayed(self):
+        return Locator(By.CSS_SELECTOR, "[class='create-farm app']")
+
+    @property
+    def open(self):
         return Locator(By.ID, "farm-chain")
 
     @property
-    def get_listbox_css(self):
+    def get_list_css(self):
         return Locator(By.CSS_SELECTOR, "[id^='react-select-2-option']")
 
     @property
-    def get_listbox_xpath(self):
-        return Locator(By.XPATH, "//div[@id='react-select-2-listbox']")
+    def get_list_xpath(self):
+        return Locator(By.XPATH, "//*[contains(@id, 'react-select-2-option')]")
 
     @property
     def get_selected_item(self):
         return Locator(By.CLASS_NAME, 'network-label')
 
+    @property
+    def is_container_message(self):
+        return Locator(By.XPATH, "//span[@class='web3-wc_modal-icon-btn web3-wc_close-modal-btn']")
+
 
 class MainPageLocators:
-    pass
+    go_bottom = Locator(By.TAG_NAME, "html")

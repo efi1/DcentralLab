@@ -1,28 +1,28 @@
+import time
+
 from tests.pages.base_page import BasePage
-from tests.utils.locators import *
+from tests.pages.staging_page import StagingPage
+from tests.pages.hord_page import HordPage
+from tests.utils.locators import MainPageLocators as Locators
 from selenium.webdriver.common.keys import Keys
 
 
 class MainPage(BasePage):
+    def __init__(self, driver, base_url):
+        super().__init__(driver, base_url)
 
-    @staticmethod
-    def navigate(driver, url):
-        page = MainPage(driver, url)
-        page.navigate_to()
-        return page
+    def navigate(self, is_displayed_locator=None):
+        # page = MainPage(driver, url)
+        self.navigate_to(is_displayed_locator)
 
-    def select_from_chains_dropdown(self, chain_name: str) -> str:
-        """
-        select a chain for a farm's token
-        :param chain_name: required chain
-        :return: selected chain
-        """
-        ele = self.find_element((By.TAG_NAME, "html"), expected_condition='presence')
+    def go_to_staging(self, url, search_type=None):
+        return StagingPage(self.driver, url, search_type)
+
+    def go_to_hord(self, url, search_type=None):
+        return HordPage(self.driver, url, search_type)
+
+    @property
+    def go_bottom(self):
+        ele = self.find_element(Locators.go_bottom, expected_condition='presence')
         ele.send_keys(Keys.END)
-        locators = ListboxLocators()
-        self.open_listbox(locators.open_listbox)
-        listbox = self.get_listbox(locators.open_listbox, locators.get_listbox_css)
-        self.select_item_listbox(listbox, chain_name)
-        selected_item = self.find_element(locators.get_selected_item).text
-        return selected_item
 
