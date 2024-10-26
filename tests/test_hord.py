@@ -1,10 +1,16 @@
+import inspect
+import logging
 import pytest
 from tests.pages.main_page import MainPage
 
 
-@pytest.mark.skip('temp')
+LOGGER = logging.getLogger()
+
+
+# @pytest.mark.skip('temp')
 def test_sidebar_verification(browser, global_data):
     """ Test the sidebar functionality """
+    LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
     url = global_data.hord_url
     main_page = MainPage(browser, url)
     hord = main_page.go_to_hord(url)
@@ -14,11 +20,13 @@ def test_sidebar_verification(browser, global_data):
     assert hord.is_sidebar_expand is False, F"sidebar is wrongly expanded"
     hord.toggle_sidebar
     assert hord.is_sidebar_expand is True, F"sidebar is not expanded as expected"
+    LOGGER.info(F"sidebar verification completed successfully")
 
 
-@pytest.mark.skip('temp')
-def test_text_faq(browser, test_config):
+# @pytest.mark.skip('temp')
+def test_faq_text_verification(browser, test_config):
     """  Verify the correctness of the faq's titles """
+    LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
     url = test_config.url
     main_page = MainPage(browser, url)
     hord = main_page.go_to_hord(url)
@@ -27,11 +35,13 @@ def test_text_faq(browser, test_config):
     faq_text_items = hord.verify_faq_titles(faq_items)
     assert test_config.faq_items == faq_text_items, (F"faq are not as expected, expected: {test_config.faq_items}, "
                                                      F"found: {faq_text_items}")
+    LOGGER.info(F"faq text verification completed successfully")
 
 
-@pytest.mark.skip('temp')
+# @pytest.mark.skip('temp')
 def test_faq_links(browser, test_config):
     """ Verify that all links are clickable and contain the correct description. """
+    LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
     url = test_config.url
     main_page = MainPage(browser, url)
     hord = main_page.go_to_hord(url)
@@ -41,3 +51,4 @@ def test_faq_links(browser, test_config):
     is_clickable, links_content = hord.verify_faq_links(faq_items)
     assert is_clickable is True, "faq links are not clickable"
     assert links_content == test_config.faq_links_content
+    LOGGER.info(F"++++ faq links verification succeeded")

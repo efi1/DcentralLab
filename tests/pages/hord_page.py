@@ -1,7 +1,12 @@
+import inspect
+import logging
 from selenium.common import TimeoutException, WebDriverException
 from selenium.webdriver import ActionChains
 from tests.pages.base_page import BasePage
 from tests.utils.locators import HordLocators
+
+
+LOGGER = logging.getLogger()
 
 
 class HordPage(BasePage, HordLocators):
@@ -11,12 +16,14 @@ class HordPage(BasePage, HordLocators):
 
     @property
     def get_sidebar_ele(self) -> object:
+        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         locator_a, locator_b = self.locators.sidebar
         ele = self.find_element(locator_a)
         return ele.find_element(locator_b.by, locator_b.value)
 
     @property
     def toggle_sidebar(self) -> None:
+        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         element = self.get_sidebar_ele
         hover = ActionChains(self.driver).move_to_element(element)
         hover.perform()
@@ -28,6 +35,7 @@ class HordPage(BasePage, HordLocators):
         Searching for expended elements.
         :return: True if found
         """
+        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         try:
             self.find_elements(self.locators.sidebar_verification, timeout_sec=2)
             return True
@@ -39,11 +47,13 @@ class HordPage(BasePage, HordLocators):
         """
         :return: a list of all faq elements
         """
+        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         faq_items = self.find_elements(self.locators.faq_wrapper, expected_condition='visibility')
         return faq_items
 
     @classmethod
     def verify_faq_titles(cls, faq_items: list) -> list:
+        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         items_text = [item.text for item in faq_items]
         return items_text
 
@@ -53,12 +63,14 @@ class HordPage(BasePage, HordLocators):
         :param faq_items: faq elements
         :return: True if clickable and the links' entire content.
         """
+        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         desc = []
         for item in faq_items:
             try:
                 item.click()
             except WebDriverException:
-                print(F"faq link is not clickable")
+                LOGGER.info(F"faq link is not clickable")
                 return False, []
             desc.append(item.find_element(self.locators.faq_links_desc.by, self.locators.faq_links_desc.value).text)
         return True, desc
+

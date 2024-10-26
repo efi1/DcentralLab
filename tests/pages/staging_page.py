@@ -1,8 +1,13 @@
+import inspect
+import logging
 import time
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common import WebDriverException, TimeoutException
 from tests.pages.base_page import BasePage
 from tests.utils.locators import ListboxLocators
+
+
+LOGGER = logging.getLogger()
 
 
 class StagingPage(BasePage, ListboxLocators):
@@ -25,6 +30,7 @@ class StagingPage(BasePage, ListboxLocators):
         return wrapper
 
     def open_listbox(self) -> None:
+        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         try:
             self.find_element(self.locators.open).click()
         except WebDriverException as e:
@@ -44,15 +50,17 @@ class StagingPage(BasePage, ListboxLocators):
     @suppress_container_message
     def get_valid_listbox(self, listbox, timeout=5) -> list:
         """ verify that listbox elements are valid, if not retrieve them again """
+        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         start_time = time.time()
         while time.time() - start_time <= timeout:
-            if listbox[0].aria_role == 'none':
+            if not listbox or listbox[0].aria_role == 'none':
                 listbox = self.get_listbox
                 time.sleep(1)
             else:
                 return listbox
 
     def select_item_listbox(self, listbox: list, chain_name: str) -> None:
+        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         self.get_valid_listbox(listbox)
         for item in listbox:
             if item.text == chain_name:
@@ -62,4 +70,5 @@ class StagingPage(BasePage, ListboxLocators):
     @property
     def get_selected_item(self) -> str:
         """ get the selected item name """
+        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         return self.find_element(self.locators.get_selected_item).text
