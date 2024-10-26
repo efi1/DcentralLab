@@ -4,6 +4,7 @@ from tests.pages.main_page import MainPage
 
 @pytest.mark.skip('temp')
 def test_sidebar_verification(browser, global_data):
+    """ Test the sidebar functionality """
     url = global_data.hord_url
     main_page = MainPage(browser, url)
     hord = main_page.go_to_hord(url)
@@ -17,6 +18,7 @@ def test_sidebar_verification(browser, global_data):
 
 @pytest.mark.skip('temp')
 def test_text_faq(browser, test_config):
+    """  Verify the correctness of the faq's titles """
     url = test_config.url
     main_page = MainPage(browser, url)
     hord = main_page.go_to_hord(url)
@@ -27,8 +29,9 @@ def test_text_faq(browser, test_config):
                                                      F"found: {faq_text_items}")
 
 
-# @pytest.mark.skip('temp')
+@pytest.mark.skip('temp')
 def test_faq_links(browser, test_config):
+    """ Verify that all links are clickable and contain the correct description. """
     url = test_config.url
     main_page = MainPage(browser, url)
     hord = main_page.go_to_hord(url)

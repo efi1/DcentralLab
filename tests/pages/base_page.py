@@ -1,6 +1,4 @@
-import time
-from selenium.common import TimeoutException, WebDriverException
-from selenium.webdriver.common.by import By
+from selenium.common import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -36,13 +34,13 @@ class BasePage(object):
     def click_on(self, locator, timeout_sec=10):
         self.find_element(locator, expected_condition='clickable', timeout_sec=timeout_sec).click()
 
-    def navigate_to(self, url='', is_displayed_locator=None):
+    def navigate_to(self, url=None, page_displayed=None):
         for uri in self.base_url:
             uri = F"{uri}/{url}" if url else uri
             try:
                 self.driver.get(uri)
-                if is_displayed_locator:
-                    self.find_element(is_displayed_locator, expected_condition='visibility', timeout_sec=2)
+                if page_displayed:
+                    self.find_element(page_displayed, expected_condition='visibility', timeout_sec=2)
                 break
             except TimeoutException as e:
                 print(F"Error when navigate to: {uri}, {e}")
@@ -56,7 +54,4 @@ class BasePage(object):
 
     def enter_txt(self, locator, txt):
         self.find_element(locator).send_keys(txt)
-
-    def wait_until_visibility_of_element_located(self, locator):
-        WebDriverWait(self.driver, timeout=5).until(EC.visibility_of_element_located(locator))
 

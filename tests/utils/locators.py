@@ -5,7 +5,7 @@ from tests.utils.locator import Locator
 class ListboxLocators:
 
     @property
-    def is_displayed(self):
+    def page_displayed(self):
         return Locator(By.CSS_SELECTOR, "[class='create-farm app']")
 
     @property
@@ -26,7 +26,7 @@ class ListboxLocators:
 
     @property
     def is_container_message(self):
-        return Locator(By.XPATH, "//span[@class='web3-wc_modal-icon-btn web3-wc_close-modal-btn']")
+        return Locator(By.CSS_SELECTOR, "span[class='web3-wc_modal-icon-btn web3-wc_close-modal-btn']")
 
 
 class HordLocators:
