@@ -1,6 +1,5 @@
 import inspect
 import logging
-
 from selenium.common import TimeoutException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -54,13 +53,4 @@ class BasePage(object):
                 break
             except TimeoutException as e:
                 LOGGER.info(F"**** Page Display Error when navigate to: {uri}")
-
-    def get_title(self):
-        return self.driver.title
-
-    def get_url(self):
-        return self.driver.current_url
-
-    def enter_txt(self, locator, txt):
-        self.find_element(locator).send_keys(txt)
 
