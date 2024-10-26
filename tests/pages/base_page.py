@@ -53,8 +53,7 @@ class BasePage(object):
                     self.find_element(page_displayed, expected_condition='visibility', timeout_sec=2)
                 break
             except TimeoutException as e:
-                LOGGER.info(F"**** Page Display Error when navigate to: {uri}, {e}")
-        # time.sleep(3)
+                LOGGER.info(F"**** Page Display Error when navigate to: {uri}")
 
     def get_title(self):
         return self.driver.title

@@ -8,10 +8,10 @@ from jinja2 import Environment, FileSystemLoader
 from tests.utils.dict_to_obj import dict_to_obj
 from tests.config.global_cfg.browser_definitions import *
 
-DRIVERS_DIR = Path().absolute().joinpath('drivers')
-GLOBAL_DIRECTORY = Path().absolute().joinpath('config', 'global_cfg')
+DRIVERS_DIR = Path().absolute().joinpath('tests', 'drivers')
+GLOBAL_DIRECTORY = Path().absolute().joinpath('tests', 'config', 'global_cfg')
 GLOBAL_CONFIG_FILE = Path(GLOBAL_DIRECTORY).joinpath('global_config.cfg')
-TEMPLATE_DIR = Path().absolute().joinpath('config', 'cfg_tests')
+TEMPLATE_DIR = Path().absolute().joinpath('tests', 'config', 'cfg_tests')
 
 
 @pytest.fixture

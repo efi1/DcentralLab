@@ -53,7 +53,7 @@ class StagingPage(BasePage, ListboxLocators):
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         start_time = time.time()
         while time.time() - start_time <= timeout:
-            if not listbox or listbox[0].aria_role == 'none':
+            if any([listbox is None, not isinstance(listbox, list), listbox[0].aria_role == 'none']):
                 listbox = self.get_listbox
                 time.sleep(1)
             else:
