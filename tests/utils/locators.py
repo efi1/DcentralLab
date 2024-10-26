@@ -33,7 +33,8 @@ class HordLocators:
 
     @property
     def sidebar(self):
-        return Locator(By.XPATH, "//div[@class='passed-content-wrapper']/div[@class='sidebar-toggle-wrapper']")
+        # Locator(By.XPATH, "//div[@class='passed-content-wrapper']/div[@class='sidebar-toggle-wrapper']")
+        return Locator(By.CLASS_NAME, "passed-content-wrapper"), Locator(By.CLASS_NAME, "sidebar-toggle-wrapper")
 
     @property
     def sidebar_verification(self):
@@ -42,6 +43,10 @@ class HordLocators:
     @property
     def faq_wrapper(self):
         return Locator(By.CLASS_NAME, "faq-question-wrapper")
+
+    @property
+    def faq_links_desc(self):
+        return Locator(By.XPATH, "//*[@class='parent-content']/article/span")
 
 
 class MainPageLocators:

@@ -1,6 +1,5 @@
 from selenium.common import TimeoutException, WebDriverException
 from selenium.webdriver import ActionChains
-from selenium.webdriver.common.by import By
 from tests.pages.base_page import BasePage
 from tests.utils.locators import HordLocators
 
@@ -11,12 +10,14 @@ class HordPage(BasePage, HordLocators):
         self.locators = HordLocators()
 
     @property
-    def get_slidebar_ele(self):
-        return self.find_element(self.locators.sidebar)
+    def get_sidebar_ele(self):
+        locator_a, locator_b = self.locators.sidebar
+        ele = self.find_element(locator_a)
+        return ele.find_element(locator_b.by, locator_b.value)
 
     @property
     def toggle_sidebar(self):
-        element = self.find_element(self.locators.sidebar)
+        element = self.get_sidebar_ele
         hover = ActionChains(self.driver).move_to_element(element)
         hover.perform()
         element.click()
@@ -39,8 +40,12 @@ class HordPage(BasePage, HordLocators):
         items_text = [item.text for item in faq_items]
         return items_text
 
-    @classmethod
-    def verify_faq_links(cls, faq_items):
+    def verify_faq_links(self, faq_items: list) -> tuple[bool, list]:
+        """
+        Verify that all links are clickable and contain the correct description.
+        :param faq_items: faq elements
+        :return: True if clickable and the links' entire content.
+        """
         desc = []
         for item in faq_items:
             try:
@@ -48,8 +53,5 @@ class HordPage(BasePage, HordLocators):
             except WebDriverException:
                 print(F"faq link is not clickable")
                 return False, []
-            desc.append(item.find_element(By.XPATH, "//*[@class='parent-content']/article/span").text)
+            desc.append(item.find_element(self.locators.faq_links_desc.by, self.locators.faq_links_desc.value).text)
         return True, desc
-
-
-

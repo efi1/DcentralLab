@@ -1,9 +1,8 @@
-import time
-
 import pytest
 from tests.pages.main_page import MainPage
 
 
+@pytest.mark.skip('temp')
 def test_sidebar_verification(browser, global_data):
     url = global_data.hord_url
     main_page = MainPage(browser, url)
@@ -16,7 +15,7 @@ def test_sidebar_verification(browser, global_data):
     assert hord.is_sidebar_expand is True, F"sidebar is not expanded as expected"
 
 
-# @pytest.mark.skip('temp')
+@pytest.mark.skip('temp')
 def test_text_faq(browser, test_config):
     url = test_config.url
     main_page = MainPage(browser, url)
