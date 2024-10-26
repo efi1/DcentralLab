@@ -2,9 +2,12 @@ import inspect
 import logging
 from selenium.common import TimeoutException, WebDriverException
 from selenium.webdriver import ActionChains
+from selenium.webdriver.support.wait import WebDriverWait
 from tests.pages.base_page import BasePage
 from tests.utils.locators import HordLocators
-
+from selenium.webdriver.support import expected_conditions as EC
+from tests.utils.locator import Locator
+from selenium.webdriver.common.by import By
 
 LOGGER = logging.getLogger()
 
@@ -48,7 +51,7 @@ class HordPage(BasePage, HordLocators):
         :return: a list of all faq elements
         """
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
-        faq_items = self.find_elements(self.locators.faq_wrapper, expected_condition='visibility')
+        faq_items = self.find_elements(self.locators.faq_wrapper)  #, expected_condition='visibility')
         return faq_items
 
     @classmethod
@@ -57,7 +60,7 @@ class HordPage(BasePage, HordLocators):
         items_text = [item.text for item in faq_items]
         return items_text
 
-    def verify_faq_links(self, faq_items: list) -> tuple[bool, list]:
+    def verify_faq_answer_links(self, faq_items: list) -> list:
         """
         Verify that all links are clickable and return their description.
         :param faq_items: faq elements
@@ -70,7 +73,15 @@ class HordPage(BasePage, HordLocators):
                 item.click()
             except WebDriverException:
                 LOGGER.info(F"faq link is not clickable")
-                return False, []
-            desc.append(item.find_element(self.locators.faq_links_desc.by, self.locators.faq_links_desc.value).text)
-        return True, desc
+                return []
+            item_desc = item.find_element(self.locators.faq_links_desc.by, self.locators.faq_links_desc.value).text
+            desc.append(item_desc)
+        return desc
 
+    @property
+    def verify_links_functionality(self):
+        items = self.get_faq_items
+        for item in items:
+            if any([not self.is_clickable(item), not self.is_clickable(item)]):
+                return False
+        return True

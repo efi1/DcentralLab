@@ -3,7 +3,6 @@ import logging
 import pytest
 from tests.pages.main_page import MainPage
 
-
 LOGGER = logging.getLogger()
 
 
@@ -24,7 +23,7 @@ def test_sidebar_verification(browser, global_data):
 
 
 # @pytest.mark.skip('temp')
-def test_faq_text_verification(browser, test_config):
+def test_faq_titles_verification(browser, test_config):
     """  Verify the correctness of the faq's titles """
     LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
     url = test_config.url
@@ -39,8 +38,8 @@ def test_faq_text_verification(browser, test_config):
 
 
 # @pytest.mark.skip('temp')
-def test_faq_links(browser, test_config):
-    """ Verify that all links are clickable and contain the correct description. """
+def test_faq_links_answers(browser, test_config):
+    """ Verify the correctness of all links' answers """
     LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
     url = test_config.url
     main_page = MainPage(browser, url)
@@ -48,7 +47,18 @@ def test_faq_links(browser, test_config):
     main_page.navigate_to()
     faq_items = hord.get_faq_items
     main_page.go_bottom
-    is_clickable, links_content = hord.verify_faq_links(faq_items)
-    assert is_clickable is True, "faq links are not clickable"
+    links_content = hord.verify_faq_answer_links(faq_items)
     assert links_content == test_config.faq_links_content
-    LOGGER.info(F"++++ faq links verification succeeded")
+    LOGGER.info(F"++++ faq links answers verification succeeded")
+
+
+# @pytest.mark.skip('temp')
+def test_verify_links_functionality(browser, global_data):
+    """ Verify that all links are clickable """
+    url = global_data.hord_url
+    main_page = MainPage(browser, url)
+    hord = main_page.go_to_hord(url)
+    main_page.navigate_to()
+    main_page.go_bottom
+    is_clickable = hord.verify_links_functionality
+    assert is_clickable is True, "faq links are not clickable"

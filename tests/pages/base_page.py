@@ -1,6 +1,8 @@
 import inspect
 import logging
-from selenium.common import TimeoutException
+import time
+
+from selenium.common import TimeoutException, WebDriverException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -17,7 +19,6 @@ EXPECTED_CONDITIONS_ELEMENTS = \
         'presence': 'presence_of_all_elements_located',
     }
 
-
 LOGGER = logging.getLogger()
 
 
@@ -26,10 +27,10 @@ class BasePage(object):
         self.base_url = [base_url] if isinstance(base_url, str) else base_url
         self.driver = driver
 
-    def find_element(self, locator, expected_condition='presence', timeout_sec=10, ignored_exceptions=None):
+    def find_element(self, locator, element=None, expected_condition='presence', timeout_sec=10, ignored_exceptions=None):
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}, locators: {locator.by, locator.value}, "
                     F"expected condition: {expected_condition}")
-        return (WebDriverWait(self.driver, timeout_sec, ignored_exceptions=ignored_exceptions).until(
+        return (WebDriverWait(element if element else self.driver, timeout_sec, ignored_exceptions=ignored_exceptions).until(
             getattr(EC, EXPECTED_CONDITIONS_ELEMENT.get(expected_condition))(locator),
             message=f"Can't find element by locator {locator}"))
 
@@ -53,4 +54,13 @@ class BasePage(object):
                 break
             except TimeoutException as e:
                 LOGGER.info(F"**** Page Display Error when navigate to: {uri}")
+        time.sleep(2)
 
+    @classmethod
+    def is_clickable(cls, item: object):
+        try:
+            item.click()
+        except WebDriverException:
+            LOGGER.info(F"item is not clickable")
+            return False
+        return True
