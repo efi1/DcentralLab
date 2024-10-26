@@ -1,13 +1,11 @@
 import inspect
 import logging
+import time
 from selenium.common import TimeoutException, WebDriverException
 from selenium.webdriver import ActionChains
-from selenium.webdriver.support.wait import WebDriverWait
 from tests.pages.base_page import BasePage
 from tests.utils.locators import HordLocators
-from selenium.webdriver.support import expected_conditions as EC
-from tests.utils.locator import Locator
-from selenium.webdriver.common.by import By
+
 
 LOGGER = logging.getLogger()
 
@@ -51,7 +49,7 @@ class HordPage(BasePage, HordLocators):
         :return: a list of all faq elements
         """
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
-        faq_items = self.find_elements(self.locators.faq_wrapper)  #, expected_condition='visibility')
+        faq_items = self.find_elements(self.locators.faq_wrapper)
         return faq_items
 
     @classmethod
@@ -85,3 +83,14 @@ class HordPage(BasePage, HordLocators):
             if any([not self.is_clickable(item), not self.is_clickable(item)]):
                 return False
         return True
+
+    @property
+    def click_on_revenue_share(self):
+        self.find_element(self.locators.goto_revenue_share, expected_condition='presence').click()
+
+    @property
+    def get_revenue_content(self) -> list:
+        time.sleep(2) # wait until all elements are loaded
+        elements = self.find_elements(self.locators.revenue_list, expected_condition='presence')
+        LOGGER.info(F"*** elements number: {len(elements)}, content:\n {elements}")
+        return [item.text for item in elements]

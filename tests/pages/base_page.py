@@ -1,7 +1,6 @@
 import inspect
 import logging
 import time
-
 from selenium.common import TimeoutException, WebDriverException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -27,12 +26,15 @@ class BasePage(object):
         self.base_url = [base_url] if isinstance(base_url, str) else base_url
         self.driver = driver
 
-    def find_element(self, locator, element=None, expected_condition='presence', timeout_sec=10, ignored_exceptions=None):
+    def find_element(self, locator, element=None, expected_condition='presence', timeout_sec=10,
+                     ignored_exceptions=None):
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}, locators: {locator.by, locator.value}, "
                     F"expected condition: {expected_condition}")
-        return (WebDriverWait(element if element else self.driver, timeout_sec, ignored_exceptions=ignored_exceptions).until(
-            getattr(EC, EXPECTED_CONDITIONS_ELEMENT.get(expected_condition))(locator),
-            message=f"Can't find element by locator {locator}"))
+        return (
+            WebDriverWait(element if element else self.driver, timeout_sec,
+                          ignored_exceptions=ignored_exceptions).until(
+                getattr(EC, EXPECTED_CONDITIONS_ELEMENT.get(expected_condition))(locator),
+                message=f"Can't find element by locator {locator}"))
 
     def find_elements(self, locator, expected_condition='presence', timeout_sec=10, ignored_exceptions=None):
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}, locators: {locator.by, locator.value}, "

@@ -24,7 +24,7 @@ class StagingPage(BasePage, ListboxLocators):
                 is_container = self.find_element(self.locators.is_container_message, timeout_sec=2,
                                                  expected_condition='clickable')
                 is_container.click()
-            except (EC.StaleElementReferenceException, TimeoutException) as e:
+            except (TimeoutException, EC.StaleElementReferenceException) as e:
                 return func(self, *args, **kwargs)
 
         return wrapper
