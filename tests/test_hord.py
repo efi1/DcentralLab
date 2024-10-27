@@ -52,6 +52,7 @@ def test_faq_links_answers(browser, test_config):
 
 def test_verify_links_functionality(browser, global_data):
     """ Verify that all links are clickable """
+    LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
     url = global_data.hord_url
     main_page = MainPage(browser, url)
     hord = main_page.go_to_hord(url)
@@ -63,12 +64,12 @@ def test_verify_links_functionality(browser, global_data):
 
 def test_verify_airdrops_content(browser, test_config):  # Bonus question
     """ Verify that the content in last airdrops container is correct """
+    LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
     url = test_config.url
     main_page = MainPage(browser, url)
     hord = main_page.go_to_hord(url)
     main_page.navigate_to()
     hord.click_on_revenue_share()
-    # main_page.go_bottom
     actual_airdrops_content = hord.get_revenue_content
     expected_airdrops_content = test_config.last_airdrops_content
     assert actual_airdrops_content == expected_airdrops_content, (F"airdrops content is not as expected; "
