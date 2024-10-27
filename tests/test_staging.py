@@ -8,7 +8,7 @@ LOGGER = logging.getLogger()
 
 @pytest.mark.parametrize("search_type", ['css', 'xpath'])
 def test_select_farm_token(browser, test_config, search_type):
-    LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
+    LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....\n")
     chain_name = test_config.chain_name
     url_list = test_config.url_list
     main_page = MainPage(browser, url_list)

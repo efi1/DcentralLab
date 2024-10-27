@@ -22,20 +22,20 @@ class HordPage(BasePage, HordLocators):
         return ele.find_element(locator_b.by, locator_b.value)
 
     @BasePage.retry_not_clickable
+    @BasePage.logger
     def toggle_sidebar(self) -> None:
-        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         element = self.get_sidebar_ele
         hover = ActionChains(self.driver).move_to_element(element)
         hover.perform()
         element.click()
 
     @property
+    @BasePage.logger
     def is_sidebar_expand(self) -> bool:
         """
         Searching for expended elements.
         :return: True if found
         """
-        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         try:
             self.find_elements(self.locators.sidebar_verification, timeout_sec=2)
             return True
@@ -49,21 +49,22 @@ class HordPage(BasePage, HordLocators):
         """
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         faq_items = self.find_elements(self.locators.faq_wrapper, expected_condition='visibility')
+        LOGGER.info(F"++++ exit {inspect.currentframe().f_code.co_name}, result: {faq_items}")
         return faq_items
 
     @classmethod
+    @BasePage.logger
     def verify_faq_titles(cls, faq_items: list) -> list:
-        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         items_text = [item.text for item in faq_items]
         return items_text
 
+    @BasePage.logger
     def verify_faq_answer_links(self, faq_items: list) -> list:
         """
         Verify that all links are clickable and return their description.
         :param faq_items: faq elements
         :return: True if clickable and the links' entire content.
         """
-        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         desc = []
         for item in faq_items:
             try:
@@ -76,6 +77,7 @@ class HordPage(BasePage, HordLocators):
         return desc
 
     @property
+    @BasePage.logger
     def verify_links_functionality(self):
         items = self.get_faq_items
         for item in items:
@@ -98,7 +100,7 @@ class HordPage(BasePage, HordLocators):
         return elements
 
     @property
+    @BasePage.logger
     def get_revenue_content(self) -> list:
         elements = self.wait_for_revenue_list()
-        LOGGER.info(F"*** elements number: {len(elements)}, content:\n {elements}")
         return [item.text for item in elements]

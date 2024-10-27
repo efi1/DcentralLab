@@ -18,12 +18,14 @@ class MainPage(BasePage):
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         self.navigate_to(url, is_displayed_locator)
 
+    @BasePage.logger
     def go_to_staging(self, base_url, search_type=None):
-        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
+        # LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         return StagingPage(self.driver, base_url, search_type)
 
+    @BasePage.logger
     def go_to_hord(self, base_url):
-        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
+        # LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         return HordPage(self.driver, base_url)
 
     @property

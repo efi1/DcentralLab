@@ -9,7 +9,7 @@ LOGGER = logging.getLogger()
 # @pytest.mark.skip('skipped for developing purposes')
 def test_sidebar_verification(browser, global_data):
     """ Test the sidebar functionality """
-    LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
+    LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....\n")
     url = global_data.hord_url
     main_page = MainPage(browser, url)
     hord = main_page.go_to_hord(url)

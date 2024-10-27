@@ -1,6 +1,8 @@
 import inspect
 import logging
 import time
+from functools import wraps
+from _ctypes_test import func
 from selenium.common import TimeoutException, WebDriverException, ElementClickInterceptedException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -74,6 +76,7 @@ class BasePage(object):
         :param func: the wrapped function.
         :return: the function execution result.
         """
+
         def wrapper(*args, **kwargs):
             counter = 0
             retries = kwargs.get('retries', 5)
@@ -85,4 +88,28 @@ class BasePage(object):
                     counter += 1
 
             raise Exception("***   element is not clickable")
+
+        return wrapper
+
+    @classmethod
+    def logger(cls, func):
+        """
+        A decorator function to log information about function calls and their results.
+        """
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            """
+            The wrapper function that logs function calls and their results.
+            """
+            LOGGER.info(f"\n++++ Running {func.__name__} with args: {args}, kwargs: {kwargs}")
+            try:
+                result = func(*args, **kwargs)
+                LOGGER.info(f"++++ Finished {func.__name__} with result: {result}\n")
+
+            except Exception as e:
+                LOGGER.error(f"++++ Error occurred in {func.__name__}: {e}\n")
+                raise
+
+            else:
+                return result
         return wrapper

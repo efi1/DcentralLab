@@ -6,7 +6,6 @@ from selenium.common import WebDriverException, TimeoutException
 from tests.pages.base_page import BasePage
 from tests.utils.locators import Staging
 
-
 LOGGER = logging.getLogger()
 
 
@@ -19,9 +18,10 @@ class StagingPage(BasePage, Staging):
     @staticmethod
     def suppress_container_message(func):
         """ supress popup overlay container"""
+
         def wrapper(self, *args, **kwargs):
             try:
-                is_container = self.find_element(self.locators.is_container_message, timeout_sec=2,
+                is_container = self.find_element(self.locators.is_container_message, timeout_sec=3,
                                                  expected_condition='clickable')
                 is_container.click()
             except (TimeoutException, EC.StaleElementReferenceException) as e:
@@ -29,6 +29,7 @@ class StagingPage(BasePage, Staging):
 
         return wrapper
 
+    @property
     def open_listbox(self) -> None:
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         try:
@@ -42,7 +43,7 @@ class StagingPage(BasePage, Staging):
         try:
             listbox = self.find_elements(self.find_locator, timeout_sec=2)
         except TimeoutException:
-            self.open_listbox()
+            self.open_listbox
             listbox = self.find_elements(self.find_locator, timeout_sec=2)
         return listbox
 
@@ -59,8 +60,8 @@ class StagingPage(BasePage, Staging):
             else:
                 return listbox
 
+    @BasePage.logger
     def select_item_listbox(self, listbox: list, chain_name: str) -> None:
-        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         self.get_valid_listbox(listbox)
         for item in listbox:
             if item.text == chain_name:
@@ -68,6 +69,7 @@ class StagingPage(BasePage, Staging):
                 break
 
     @property
+    @BasePage.logger
     def get_selected_item(self) -> str:
         """ get the selected item name """
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
