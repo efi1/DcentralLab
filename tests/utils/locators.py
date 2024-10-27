@@ -55,10 +55,6 @@ class HordLocators:
     def revenue_list(self):
         return Locator(By.XPATH, "//*[contains(@class, 'revenue-share-history-wrapper')]/div")
 
-    @property
-    def revenue_first_item(self):
-        return Locator(By.XPATH, "//*[contains(@class, 'revenue-share-history-wrapper')]/div[1]")
-
 
 class MainPageLocators:
     go_bottom = Locator(By.TAG_NAME, "html")
