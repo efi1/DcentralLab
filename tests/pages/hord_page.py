@@ -48,7 +48,7 @@ class HordPage(BasePage, HordLocators):
         :return: a list of all faq elements
         """
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
-        faq_items = self.find_elements(self.locators.faq_wrapper)
+        faq_items = self.find_elements(self.locators.faq_wrapper, expected_condition='visibility')
         return faq_items
 
     @classmethod
