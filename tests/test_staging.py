@@ -1,6 +1,5 @@
 import inspect
 import logging
-
 import pytest
 from tests.pages.main_page import MainPage
 
@@ -8,7 +7,6 @@ LOGGER = logging.getLogger()
 
 
 @pytest.mark.parametrize("search_type", ['css', 'xpath'])
-@pytest.mark.skip('tmp')
 def test_select_farm_token(browser, test_config, search_type):
     LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
     chain_name = test_config.chain_name

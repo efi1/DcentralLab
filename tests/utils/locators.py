@@ -2,7 +2,7 @@ from selenium.webdriver.common.by import By
 from tests.utils.locator import Locator
 
 
-class ListboxLocators:
+class Staging:
 
     @property
     def page_displayed(self):
@@ -13,12 +13,12 @@ class ListboxLocators:
         return Locator(By.ID, "farm-chain")
 
     @property
-    def get_list_css(self):
+    def get_listbox_css(self):
         return Locator(By.CSS_SELECTOR, "[id^='react-select-2-option']")
 
     @property
-    def get_list_xpath(self):
-        return Locator(By.XPATH, "//*[contains(@id, 'react-select-2-option')]")
+    def get_listbox_xpath(self):
+        return Locator(By.XPATH, "//*[starts-with(@id, 'react-select-2-option')]")
 
     @property
     def get_selected_item(self):
@@ -54,6 +54,10 @@ class HordLocators:
     @property
     def revenue_list(self):
         return Locator(By.XPATH, "//*[contains(@class, 'revenue-share-history-wrapper')]/div")
+
+    @property
+    def revenue_first_item(self):
+        return Locator(By.XPATH, "//*[contains(@class, 'revenue-share-history-wrapper')]/div[1]")
 
 
 class MainPageLocators:

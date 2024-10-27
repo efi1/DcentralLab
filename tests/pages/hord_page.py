@@ -2,10 +2,9 @@ import inspect
 import logging
 import time
 from selenium.common import TimeoutException, WebDriverException
-from selenium.webdriver import ActionChains
+from selenium.webdriver import ActionChains, Keys
 from tests.pages.base_page import BasePage
 from tests.utils.locators import HordLocators
-
 
 LOGGER = logging.getLogger()
 
@@ -22,7 +21,7 @@ class HordPage(BasePage, HordLocators):
         ele = self.find_element(locator_a)
         return ele.find_element(locator_b.by, locator_b.value)
 
-    @property
+    @BasePage.retry_not_clickable
     def toggle_sidebar(self) -> None:
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         element = self.get_sidebar_ele
@@ -84,13 +83,22 @@ class HordPage(BasePage, HordLocators):
                 return False
         return True
 
-    @property
+    #
+    @BasePage.retry_not_clickable
     def click_on_revenue_share(self):
         self.find_element(self.locators.goto_revenue_share, expected_condition='presence').click()
 
+    def wait_for_revenue_list(self, timeout=10) -> list:
+        start_time = time.time()
+        while time.time() - start_time < timeout:
+            elements = self.find_elements(self.locators.revenue_list)
+            if len(elements) > 1:
+                break
+            time.sleep(1)
+        return elements
+
     @property
     def get_revenue_content(self) -> list:
-        time.sleep(2) # wait until all elements are loaded
-        elements = self.find_elements(self.locators.revenue_list, expected_condition='presence')
+        elements = self.wait_for_revenue_list()
         LOGGER.info(F"*** elements number: {len(elements)}, content:\n {elements}")
         return [item.text for item in elements]

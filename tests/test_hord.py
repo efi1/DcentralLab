@@ -6,7 +6,7 @@ from tests.pages.main_page import MainPage
 LOGGER = logging.getLogger()
 
 
-@pytest.mark.skip('temp')
+# @pytest.mark.skip('skipped for developing purposes')
 def test_sidebar_verification(browser, global_data):
     """ Test the sidebar functionality """
     LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
@@ -15,14 +15,13 @@ def test_sidebar_verification(browser, global_data):
     hord = main_page.go_to_hord(url)
     main_page.navigate_to()
     assert hord.is_sidebar_expand is True, F"sidebar is not expanded as expected"
-    hord.toggle_sidebar
+    hord.toggle_sidebar()
     assert hord.is_sidebar_expand is False, F"sidebar is wrongly expanded"
-    hord.toggle_sidebar
+    hord.toggle_sidebar()
     assert hord.is_sidebar_expand is True, F"sidebar is not expanded as expected"
     LOGGER.info(F"sidebar verification completed successfully")
 
 
-@pytest.mark.skip('temp')
 def test_faq_titles_verification(browser, test_config):
     """  Verify the correctness of the faq's titles """
     LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
@@ -37,7 +36,6 @@ def test_faq_titles_verification(browser, test_config):
     LOGGER.info(F"faq text verification completed successfully")
 
 
-@pytest.mark.skip('temp')
 def test_faq_links_answers(browser, test_config):
     """ Verify the correctness of all links' answers """
     LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
@@ -52,7 +50,6 @@ def test_faq_links_answers(browser, test_config):
     LOGGER.info(F"++++ faq links answers verification succeeded")
 
 
-@pytest.mark.skip('temp')
 def test_verify_links_functionality(browser, global_data):
     """ Verify that all links are clickable """
     url = global_data.hord_url
@@ -64,17 +61,17 @@ def test_verify_links_functionality(browser, global_data):
     assert is_clickable is True, "faq links are not clickable"
 
 
-def test_verify_airdrops_content(browser, test_config):
+def test_verify_airdrops_content(browser, test_config):  # Bonus question
     """ Verify that the content in last airdrops container is correct """
     url = test_config.url
     main_page = MainPage(browser, url)
     hord = main_page.go_to_hord(url)
     main_page.navigate_to()
-    hord.click_on_revenue_share
+    hord.click_on_revenue_share()
+    # main_page.go_bottom
     actual_airdrops_content = hord.get_revenue_content
     expected_airdrops_content = test_config.last_airdrops_content
     assert actual_airdrops_content == expected_airdrops_content, (F"airdrops content is not as expected; "
                                                                   F"actual: {actual_airdrops_content}"
                                                                   F"expected: {expected_airdrops_content}")
     LOGGER.info(F"++++ last airdrops container content verification succeeded")
-

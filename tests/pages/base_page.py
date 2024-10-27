@@ -1,7 +1,7 @@
 import inspect
 import logging
 import time
-from selenium.common import TimeoutException, WebDriverException
+from selenium.common import TimeoutException, WebDriverException, ElementClickInterceptedException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -66,3 +66,23 @@ class BasePage(object):
             LOGGER.info(F"item is not clickable")
             return False
         return True
+
+    @staticmethod
+    def retry_not_clickable(func) -> object:
+        """
+        it retries func exec when StaleElementReferenceException or ElementClickInterceptedException occur.
+        :param func: the wrapped function.
+        :return: the function execution result.
+        """
+        def wrapper(*args, **kwargs):
+            counter = 0
+            retries = kwargs.get('retries', 5)
+            while counter <= retries:
+                try:
+                    return func(*args, **kwargs)
+                except (EC.StaleElementReferenceException, ElementClickInterceptedException) as e:
+                    LOGGER.info(F"Error occurred:\n{e.msg}\nRetrying...")
+                    counter += 1
+
+            raise Exception("***   element is not clickable")
+        return wrapper

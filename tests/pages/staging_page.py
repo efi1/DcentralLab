@@ -4,17 +4,17 @@ import time
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common import WebDriverException, TimeoutException
 from tests.pages.base_page import BasePage
-from tests.utils.locators import ListboxLocators
+from tests.utils.locators import Staging
 
 
 LOGGER = logging.getLogger()
 
 
-class StagingPage(BasePage, ListboxLocators):
+class StagingPage(BasePage, Staging):
     def __init__(self, driver, base_url, search_type=None):
         super().__init__(driver, base_url)
-        self.locators = ListboxLocators()
-        self.find_locator = self.locators.get_list_css if search_type == 'css' else self.locators.get_list_xpath
+        self.locators = Staging()
+        self.find_locator = self.locators.get_listbox_css if search_type == 'css' else self.locators.get_listbox_xpath
 
     @staticmethod
     def suppress_container_message(func):
@@ -34,8 +34,7 @@ class StagingPage(BasePage, ListboxLocators):
         try:
             self.find_element(self.locators.open).click()
         except WebDriverException as e:
-            print(e)
-            # LOGGER(e)
+            LOGGER.info(F"Failed in {inspect.currentframe().f_code.co_name}: {e}")
 
     @suppress_container_message
     def get_listbox(self) -> list:
@@ -53,7 +52,8 @@ class StagingPage(BasePage, ListboxLocators):
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         start_time = time.time()
         while time.time() - start_time <= timeout:
-            if any([listbox is None, not isinstance(listbox, list), listbox[0].aria_role == 'none']):
+            LOGGER.info(F"** listbox: {listbox}, type: {type(listbox)}")
+            if listbox is None or listbox[0].aria_role == 'none':
                 listbox = self.get_listbox
                 time.sleep(1)
             else:
