@@ -81,7 +81,7 @@ class HordPage(BasePage, HordLocators):
     def verify_links_functionality(self):
         items = self.get_faq_items
         for item in items:
-            if not self.is_clickable(item):
+            if any([not self.is_clickable(item), not self.is_clickable(item)]):
                 return False
         return True
 
