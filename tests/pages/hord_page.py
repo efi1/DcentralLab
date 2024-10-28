@@ -48,7 +48,7 @@ class HordPage(BasePage, HordLocators):
         :return: a list of all faq elements
         """
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
-        faq_items = self.find_elements(self.locators.faq_wrapper, expected_condition='visibility')
+        faq_items = self.find_elements(self.locators.faq_wrapper, expected_condition='presence')
         LOGGER.info(F"++++ exit {inspect.currentframe().f_code.co_name}, result: {faq_items}")
         return faq_items
 
@@ -81,7 +81,7 @@ class HordPage(BasePage, HordLocators):
     def verify_links_functionality(self):
         items = self.get_faq_items
         for item in items:
-            if any([not self.is_clickable(item), not self.is_clickable(item)]):
+            if not self.is_clickable(item):
                 return False
         return True
 
