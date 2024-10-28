@@ -74,5 +74,4 @@ class StagingPage(BasePage, Staging):
     @BasePage.logger
     def get_selected_item(self) -> str:
         """ get the selected item name """
-        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         return self.find_element(self.locators.get_selected_item).text
