@@ -70,7 +70,7 @@ class BasePage(object):
         return True
 
     @staticmethod
-    def retry_not_clickable(func) -> object:
+    def retry_unreachable_element(func) -> object:
         """
         it retries func exec when StaleElementReferenceException or ElementClickInterceptedException occur.
         :param func: the wrapped function.

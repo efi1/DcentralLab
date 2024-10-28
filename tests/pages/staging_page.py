@@ -21,7 +21,7 @@ class StagingPage(BasePage, Staging):
 
         def wrapper(self, *args, **kwargs):
             try:
-                is_container = self.find_element(self.locators.is_container_message, timeout_sec=3,
+                is_container = self.find_element(self.locators.is_container_message, timeout_sec=2,
                                                  expected_condition='clickable')
                 is_container.click()
             except (TimeoutException, EC.StaleElementReferenceException) as e:
@@ -37,6 +37,7 @@ class StagingPage(BasePage, Staging):
         except WebDriverException as e:
             LOGGER.info(F"Failed in {inspect.currentframe().f_code.co_name}: {e}")
 
+    @property
     @suppress_container_message
     def get_listbox(self) -> list:
         """ get all listbox elements"""
@@ -54,12 +55,13 @@ class StagingPage(BasePage, Staging):
         start_time = time.time()
         while time.time() - start_time <= timeout:
             LOGGER.info(F"** listbox: {listbox}, type: {type(listbox)}")
-            if listbox is None or listbox[0].aria_role == 'none':
+            if listbox[0].aria_role == 'none':
                 listbox = self.get_listbox
                 time.sleep(1)
             else:
                 return listbox
 
+    @BasePage.retry_unreachable_element
     @BasePage.logger
     def select_item_listbox(self, listbox: list, chain_name: str) -> None:
         self.get_valid_listbox(listbox)

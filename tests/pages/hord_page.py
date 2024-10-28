@@ -21,7 +21,7 @@ class HordPage(BasePage, HordLocators):
         ele = self.find_element(locator_a)
         return ele.find_element(locator_b.by, locator_b.value)
 
-    @BasePage.retry_not_clickable
+    @BasePage.retry_unreachable_element
     @BasePage.logger
     def toggle_sidebar(self) -> None:
         element = self.get_sidebar_ele
@@ -86,7 +86,7 @@ class HordPage(BasePage, HordLocators):
         return True
 
     #
-    @BasePage.retry_not_clickable
+    @BasePage.retry_unreachable_element
     def click_on_revenue_share(self):
         self.find_element(self.locators.goto_revenue_share, expected_condition='presence').click()
 

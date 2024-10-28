@@ -16,7 +16,7 @@ def test_select_farm_token(browser, test_config, search_type):
     main_page.navigate_to(page_displayed=staging.locators.page_displayed)
     main_page.go_bottom
     staging.open_listbox
-    listbox = staging.get_listbox()
+    listbox = staging.get_listbox
     staging.select_item_listbox(listbox, chain_name)
     selected_item = staging.get_selected_item
     assert selected_item == chain_name, F"item wrongly selected; {selected_item} instead of {chain_name}"
