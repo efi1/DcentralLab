@@ -49,7 +49,8 @@ class HordLocators:
 
     @property
     def goto_revenue_share(self):
-        return Locator(By.XPATH, "//span[text()='Revenue Share']")
+        return Locator(By.LINK_TEXT, "Revenue Share")  # better than the following.
+        # return Locator(By.XPATH, "//span[text()='Revenue Share']")
 
     @property
     def revenue_list(self):
