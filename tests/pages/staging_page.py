@@ -33,7 +33,7 @@ class StagingPage(BasePage, Staging):
     def open_listbox(self) -> None:
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         try:
-            self.find_element(self.locators.open).click()
+            self.click_on(self.locators.open)
         except WebDriverException as e:
             LOGGER.info(F"Failed in {inspect.currentframe().f_code.co_name}: {e}")
 
