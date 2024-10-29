@@ -77,6 +77,7 @@ class BasePage(object):
         :return: the function execution result.
         """
 
+        @wraps(func)
         def wrapper(*args, **kwargs):
             counter = 0
             retries = kwargs.get('retries', 5)
