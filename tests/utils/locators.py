@@ -41,11 +41,13 @@ class HordLocators:
 
     @property
     def faq_wrapper(self):
-        return Locator(By.CLASS_NAME, "faq-question-wrapper")
+        # return Locator(By.CLASS_NAME, "faq-question-wrapper")
+        return Locator(By.CLASS_NAME, "faq-item-wrapper")
 
     @property
     def faq_links_desc(self):
-        return Locator(By.XPATH, "//*[@class='parent-content']/article/span")
+        # return Locator(By.XPATH, "//*[@class='parent-content']/article/span")
+        return Locator(By.CSS_SELECTOR, "article[class^='faq-item-answer']")
 
     @property
     def goto_revenue_share(self):
