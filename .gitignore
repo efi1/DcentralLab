@@ -14,6 +14,9 @@ tests/DcentralLab.egg-info/
 tests/__pycache__/*
 tests/__pycache__
 tests/utils/__pycache__/
+tests/config/__pycache__/
+tests/config/global_cfg/__pycache__/
+tests/pages/__pycache__/
 logs
 ./logfile.log
 logs/logfile.log

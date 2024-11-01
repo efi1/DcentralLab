@@ -2,7 +2,7 @@ import inspect
 import logging
 import time
 from selenium.common import TimeoutException, WebDriverException
-from selenium.webdriver import ActionChains, Keys
+from selenium.webdriver import ActionChains
 from tests.pages.base_page import BasePage
 from tests.utils.locators import HordLocators
 
