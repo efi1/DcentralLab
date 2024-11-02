@@ -15,9 +15,10 @@ def test_sidebar_verification(browser, global_data):
     hord = main_page.go_to_hord(url)
     main_page.navigate_to()
     assert hord.is_sidebar_expand is True, F"sidebar is not expanded as expected"
-    hord.toggle_sidebar()
+    sidebar_ele = hord.get_action_chains
+    hord.toggle_sidebar(sidebar_ele)
     assert hord.is_sidebar_expand is False, F"sidebar is wrongly expanded"
-    hord.toggle_sidebar()
+    hord.toggle_sidebar(sidebar_ele)
     assert hord.is_sidebar_expand is True, F"sidebar is not expanded as expected"
     LOGGER.info(F"sidebar verification completed successfully")
 
@@ -41,11 +42,11 @@ def test_faq_links_answers(browser, test_config):
     LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
     url = test_config.url
     main_page = MainPage(browser, url)
-    hord = main_page.go_to_hord(url)
+    hord_page = main_page.go_to_hord(url)
     main_page.navigate_to()
-    faq_items = hord.get_faq_items
+    faq_items = hord_page.get_faq_items
     main_page.go_bottom
-    links_content = hord.verify_faq_answer_links(faq_items)
+    links_content = hord_page.verify_faq_answer_links(faq_items)
     assert links_content == test_config.faq_links_content
     LOGGER.info(F"++++ faq links answers verification succeeded")
 

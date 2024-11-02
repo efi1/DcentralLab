@@ -3,6 +3,8 @@ import logging
 import time
 from selenium.common import TimeoutException, WebDriverException
 from selenium.webdriver import ActionChains
+from selenium.webdriver.remote.webelement import WebElement
+
 from tests.pages.base_page import BasePage
 from tests.utils.locators import HordLocators
 
@@ -15,18 +17,23 @@ class HordPage(BasePage, HordLocators):
         self.locators = HordLocators()
 
     @property
-    def get_sidebar_ele(self) -> object:
+    def get_sidebar_ele(self) -> WebElement:
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}....")
         locator_a, locator_b = self.locators.sidebar
         ele = self.find_element(locator_a)
         return ele.find_element(locator_b.by, locator_b.value)
 
+    @property
     @BasePage.retry_unreachable_element
     @BasePage.logger
-    def toggle_sidebar(self) -> None:
+    def get_action_chains(self) -> WebElement:
         element = self.get_sidebar_ele
-        hover = ActionChains(self.driver).move_to_element(element)
-        hover.perform()
+        ActionChains(self.driver).move_to_element(element).perform()
+        return element
+
+    @BasePage.logger
+    @BasePage.logger
+    def toggle_sidebar(self, element) -> None:
         element.click()
 
     @property
