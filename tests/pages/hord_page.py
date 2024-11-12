@@ -81,6 +81,7 @@ class HordPage(BasePage, HordLocators):
                 return []
             item_desc = item.find_element(self.locators.faq_links_desc.by, self.locators.faq_links_desc.value).text
             desc.append(item_desc)
+            # item.click()
         return desc
 
     @property

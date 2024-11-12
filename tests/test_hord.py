@@ -6,14 +6,24 @@ from tests.pages.main_page import MainPage
 LOGGER = logging.getLogger()
 
 
-# @pytest.mark.skip('skipped for developing purposes')
-def test_sidebar_verification(browser, global_data):
-    """ Test the sidebar functionality """
-    LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....\n")
+@pytest.fixture(scope='module')
+def get_pages_instances(browser, global_data):
     url = global_data.hord_url
     main_page = MainPage(browser, url)
-    hord = main_page.go_to_hord(url)
     main_page.navigate_to()
+    return main_page.go_to_hord(url), main_page
+
+
+def verify_result(actual_result, expected_result, err_msg):
+    assert actual_result == expected_result, (F"{err_msg}, expected: {expected_result}, "
+                                              F"found: {actual_result}")
+
+
+# @pytest.mark.skip('skipped for developing purposes')
+def test_sidebar_verification(browser, get_pages_instances):
+    """ Test the sidebar functionality """
+    LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....\n")
+    hord, _ = get_pages_instances
     assert hord.is_sidebar_expand is True, F"sidebar is not expanded as expected"
     sidebar_ele = hord.get_action_chains
     hord.toggle_sidebar(sidebar_ele)
@@ -23,57 +33,42 @@ def test_sidebar_verification(browser, global_data):
     LOGGER.info(F"sidebar verification completed successfully")
 
 
-def test_faq_titles_verification(browser, test_config):
+def test_faq_titles_verification(test_data, get_pages_instances):
     """  Verify the correctness of the faq's titles """
     LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
-    url = test_config.url
-    main_page = MainPage(browser, url)
-    hord = main_page.go_to_hord(url)
-    main_page.navigate_to()
+    hord, _ = get_pages_instances
     faq_items = hord.get_faq_items
     faq_text_items = hord.verify_faq_titles(faq_items)
-    assert test_config.faq_items == faq_text_items, (F"faq are not as expected, expected: {test_config.faq_items}, "
-                                                     F"found: {faq_text_items}")
-    LOGGER.info(F"faq text verification completed successfully")
+    verify_result(faq_text_items, test_data.faq_items, 'wrong titles content')
+    LOGGER.info(F"faq titles verification completed successfully")
 
 
-def test_faq_links_answers(browser, test_config):
+def test_verify_links_functionality(browser, get_pages_instances):
+    """ Verify that all links are clickable """
+    LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
+    hord, main_page = get_pages_instances
+    main_page.go_bottom
+    is_clickable = hord.verify_links_functionality
+    verify_result(is_clickable, True, 'faq links are not clickable')
+
+
+def test_faq_links_answers(browser, test_data, get_pages_instances):
     """ Verify the correctness of all links' answers """
     LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
-    url = test_config.url
-    main_page = MainPage(browser, url)
-    hord_page = main_page.go_to_hord(url)
-    main_page.navigate_to()
-    faq_items = hord_page.get_faq_items
+    hord, main_page = get_pages_instances
+    faq_items = hord.get_faq_items
     main_page.go_bottom
-    links_content = hord_page.verify_faq_answer_links(faq_items)
-    assert links_content == test_config.faq_links_content
+    links_content = hord.verify_faq_answer_links(faq_items)
+    verify_result(links_content, test_data.faq_links_content, 'wrong links answer')
     LOGGER.info(F"++++ faq links answers verification succeeded")
 
 
-def test_verify_links_functionality(browser, global_data):
-    """ Verify that all links are clickable """
-    LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
-    url = global_data.hord_url
-    main_page = MainPage(browser, url)
-    hord = main_page.go_to_hord(url)
-    main_page.navigate_to()
-    main_page.go_bottom
-    is_clickable = hord.verify_links_functionality
-    assert is_clickable is True, "faq links are not clickable"
-
-
-def test_verify_airdrops_content(browser, test_config):  # Bonus question
+def test_verify_airdrops_content(browser, test_data, get_pages_instances):  # Bonus question
     """ Verify that the content in last airdrops container is correct """
     LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
-    url = test_config.url
-    main_page = MainPage(browser, url)
-    hord = main_page.go_to_hord(url)
-    main_page.navigate_to()
+    hord, main_page = get_pages_instances
     hord.click_on_revenue_share()
     actual_airdrops_content = hord.get_revenue_content
-    expected_airdrops_content = test_config.last_airdrops_content
-    assert actual_airdrops_content == expected_airdrops_content, (F"airdrops content is not as expected; "
-                                                                  F"actual: {actual_airdrops_content}"
-                                                                  F"expected: {expected_airdrops_content}")
+    expected_airdrops_content = test_data.last_airdrops_content
+    verify_result(actual_airdrops_content, expected_airdrops_content, 'airdrops content is not as expected')
     LOGGER.info(F"++++ last airdrops container content verification succeeded")

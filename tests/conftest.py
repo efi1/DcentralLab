@@ -49,7 +49,7 @@ def get_cfg_template(test_name, cfg_template_dir):
 
 
 @pytest.fixture(scope="function")
-def test_config(test_name: str, global_dict_data: dict) -> dict:
+def test_data(test_name: str, global_dict_data: dict) -> dict:
     """
     updates test's data with the global_cfg data
     :param test_name: test name

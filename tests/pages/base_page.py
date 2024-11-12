@@ -58,7 +58,7 @@ class BasePage(object):
                 break
             except TimeoutException as e:
                 LOGGER.info(F"**** Page Display Error when navigate to: {uri}")
-        time.sleep(2)
+        time.sleep(3)
 
     @classmethod
     def is_clickable(cls, item: object):
