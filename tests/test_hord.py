@@ -67,7 +67,7 @@ def test_verify_airdrops_content(browser, test_data, get_pages_instances):  # Bo
     """ Verify that the content in last airdrops container is correct """
     LOGGER.info(F"\n\n++++ in {inspect.currentframe().f_code.co_name}....")
     hord, main_page = get_pages_instances
-    main_page.got_up
+    main_page.go_up
     hord.click_on_revenue_share()
     actual_airdrops_content = hord.get_revenue_content
     expected_airdrops_content = test_data.last_airdrops_content

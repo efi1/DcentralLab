@@ -36,7 +36,7 @@ class MainPage(BasePage):
 
 
     @property
-    def got_up(self):
+    def go_up(self):
         ele = self.find_element(Locators.get_page, expected_condition='presence')
         ele.send_keys(Keys.PAGE_UP)
         time.sleep(1)
