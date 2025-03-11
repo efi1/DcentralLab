@@ -96,7 +96,7 @@ class HordPage(BasePage, HordLocators):
     #
     @BasePage.retry_unreachable_element
     def click_on_revenue_share(self):
-        self.find_element(self.locators.goto_revenue_share, expected_condition='presence').click()
+        self.find_element(self.locators.goto_revenue_share, expected_condition='clickable').click()
 
     def wait_for_revenue_list(self, timeout=10) -> list:
         start_time = time.time()

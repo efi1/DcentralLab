@@ -26,7 +26,7 @@ def read_file(file_path: str):
     return data
 
 
-def json_load(path: str) -> json:
+def json_load(path) -> json:
     data = read_file(path)
     return json.loads(data)
 
@@ -77,17 +77,17 @@ def browser_config(global_dict_data):
 
 
 def set_options(opts, browser_config):
-    if browser_config.mode == 'Headless':
+    if 'Headless' in browser_config.modes:
         opts.add_argument('--headless=new')
         opts.add_argument('ignore-certificate-errors')
-    elif browser_config.mode == 'Silent':
+    if 'Silent' in browser_config.modes:
         opts.add_argument('--silent=new')
-    elif browser_config.window_size == 'Maximized':
+    if browser_config.window_size == 'Maximized':
         opts.add_argument('--start-maximized=new')
     opts.page_load_strategy = browser_config.page_load_strategy
 
 
-def get_webdriver(config: dict, b_type: str) -> object:
+def get_webdriver(config: object, b_type: str) -> object:
     """
     Initiate and return the driver
     :param config:
@@ -100,13 +100,20 @@ def get_webdriver(config: dict, b_type: str) -> object:
     driver_manager = WEBDRIVER_MANAGER[b_type]
     driver_fn = WEBDRIVER_TYPE[b_type]
     Path(DRIVERS_DIR).mkdir(parents=True, exist_ok=True)
+    """
+    Path(DRIVERS_DIR).mkdir(parents=True, exist_ok=True);
+    If parents is true, any missing parents of this path are created as needed; 
+    they are created with the default permissions without taking mode into account (mimicking the POSIX mkdir -p command).
+    If exist_ok is true, FileExistsError will not be raised unless the given path already exists in the file system and 
+    is not a directory (same behavior as the POSIX mkdir -p command).
+    """
     driver_path = Path(DRIVERS_DIR).joinpath(F"{driver_fn}.exe")
-    if not driver_path.exists():
+    if driver_path.exists():
+        cur_service = service(driver_path)
+        driver = getattr(webdriver, b_type)(service=cur_service, options=opts)
+    else:
         driver = getattr(webdriver, b_type)(service=service(driver_manager().install()), options=opts)
         shutil.copy(driver.service.path, driver_path)
-    else:
-        service = service(driver_path)
-        driver = getattr(webdriver, b_type)(service=service, options=opts)
     return driver
 
 

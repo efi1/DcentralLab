@@ -20,8 +20,6 @@ setup(
     },
 
     # metadata
-    author='Efi Ovadia',
-    author_email='efovadia@gmail.com',
     license='proprietary',
     install_requires=required
 )

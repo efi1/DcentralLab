@@ -30,6 +30,13 @@ class MainPage(BasePage):
 
     @property
     def go_bottom(self):
-        ele = self.find_element(Locators.go_bottom, expected_condition='presence')
+        ele = self.find_element(Locators.get_page, expected_condition='presence')
         ele.send_keys(Keys.END)
+        time.sleep(2)
+
+
+    @property
+    def got_up(self):
+        ele = self.find_element(Locators.get_page, expected_condition='presence')
+        ele.send_keys(Keys.PAGE_UP)
         time.sleep(2)
