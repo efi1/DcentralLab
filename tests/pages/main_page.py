@@ -39,4 +39,4 @@ class MainPage(BasePage):
     def got_up(self):
         ele = self.find_element(Locators.get_page, expected_condition='presence')
         ele.send_keys(Keys.PAGE_UP)
-        time.sleep(2)
+        time.sleep(1)
