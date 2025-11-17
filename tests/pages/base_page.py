@@ -1,8 +1,7 @@
 import inspect
 import logging
-import time
 from functools import wraps
-from _ctypes_test import func
+from utils.locators import MainPageLocators
 from selenium.common import TimeoutException, WebDriverException, ElementClickInterceptedException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -28,20 +27,25 @@ class BasePage(object):
         self.base_url = [base_url] if isinstance(base_url, str) else base_url
         self.driver = driver
 
+    @classmethod
+    def get_wait_object(cls, driver_or_element, timeout: int, ignored_exceptions=None) -> WebDriverWait:
+        return WebDriverWait(driver_or_element, timeout)
+
     def find_element(self, locator, element=None, expected_condition='presence', timeout_sec=10,
                      ignored_exceptions=None):
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}, locators: {locator.by, locator.value}, "
                     F"expected condition: {expected_condition}")
-        return (
-            WebDriverWait(element if element else self.driver, timeout_sec,
-                          ignored_exceptions=ignored_exceptions).until(
+        element = element if element else self.driver
+        wait = self.get_wait_object(element, timeout_sec, ignored_exceptions)
+        return (wait.until(
                 getattr(EC, EXPECTED_CONDITIONS_ELEMENT.get(expected_condition))(locator),
                 message=f"Can't find element by locator {locator}"))
 
     def find_elements(self, locator, expected_condition='presence', timeout_sec=10, ignored_exceptions=None):
         LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}, locators: {locator.by, locator.value}, "
                     F"expected condition: {expected_condition}")
-        return WebDriverWait(self.driver, timeout_sec, ignored_exceptions=ignored_exceptions).until(
+        wait = self.get_wait_object(self.driver, timeout_sec, ignored_exceptions)
+        return wait.until(
             getattr(EC, EXPECTED_CONDITIONS_ELEMENTS.get(expected_condition))(locator),
             message=f"Can't find elements by locator {locator}")
 
@@ -51,14 +55,14 @@ class BasePage(object):
     def navigate_to(self, url=None, page_displayed=None):
         for uri in self.base_url:
             uri = F"{uri}/{url}" if url else uri
+            wait = WebDriverWait(self.driver, 15)
+            self.driver.get(uri)
             try:
-                self.driver.get(uri)
-                if page_displayed:
-                    self.find_element(page_displayed, expected_condition='visibility', timeout_sec=2)
-                break
+                # wait.until(EC.element_to_be_clickable((By.XPATH, "//span[contains(text(), 'Have more questions?')]")))
+                wait.until(EC.element_to_be_clickable(MainPageLocators.get_questions))
             except TimeoutException as e:
-                LOGGER.info(F"**** Page Display Error when navigate to: {uri}")
-        time.sleep(3)
+                LOGGER.info(F"**** Page Display Error when navigate to: {uri}, Error: {e}")
+
 
     @classmethod
     def is_clickable(cls, item: object):

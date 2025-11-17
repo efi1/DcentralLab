@@ -61,4 +61,5 @@ class HordLocators:
 
 class MainPageLocators:
     get_page = Locator(By.TAG_NAME, "html")
+    get_questions = Locator(By.CSS_SELECTOR, "span[data-test-id='more-questions']")
 
