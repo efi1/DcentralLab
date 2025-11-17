@@ -1,9 +1,11 @@
 import json
+import logging
 import shutil
 from pathlib import Path
 import pytest as pytest
 import yaml
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from jinja2 import Environment, FileSystemLoader
 from tests.utils.dict_to_obj import dict_to_obj
 from tests.config.global_cfg.browser_definitions import *
@@ -112,7 +114,10 @@ def get_webdriver(config: object, b_type: str) -> object:
         cur_service = service(driver_path)
         driver = getattr(webdriver, b_type)(service=cur_service, options=opts)
     else:
-        driver = getattr(webdriver, b_type)(service=service(driver_manager().install()), options=opts)
+        try:
+            driver = getattr(webdriver, b_type)(service=service(driver_manager().install()), options=opts)
+        except (ConnectionError, WebDriverException) as e:
+            raise RuntimeError("WebDriver setup failed due to connection or initialization error.") from e
         shutil.copy(driver.service.path, driver_path)
     return driver
 

@@ -27,7 +27,7 @@ Test's cfg files (resides under tests.config.cfg_tests) and contains the specifi
 ## Before running the tests:
   - Create a Python virtual environment and activate it.
   - upgrade the pip package by: **python -m pip install --upgrade pip**
-  - install setup.py by: **python -m setup.py install**
+  - install setup.py by: **python -m setup.py install .**
 
 
 ## To run the tests via pytest (for both Windows and Linux)
