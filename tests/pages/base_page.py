@@ -27,27 +27,46 @@ class BasePage(object):
         self.base_url = [base_url] if isinstance(base_url, str) else base_url
         self.driver = driver
 
+    @staticmethod
+    def logger(func):
+        """
+        A decorator function to log information about function calls and their results.
+        """
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            """
+            The wrapper function that logs function calls and their results.
+            """
+            LOGGER.info(f"\n++++ Running {func.__name__} with args: {args}, kwargs: {kwargs}")
+            try:
+                result = func(*args, **kwargs)
+                LOGGER.info(f"++++ Finished {func.__name__} with result: {result}\n")
+
+            except Exception as e:
+                LOGGER.error(f"++++ Error occurred in {func.__name__}: {e}\n")
+                raise
+
+            else:
+                return result
+        return wrapper
+
     @classmethod
     def get_wait_object(cls, driver_or_element, timeout: int, ignored_exceptions=None) -> WebDriverWait:
         return WebDriverWait(driver_or_element, timeout)
 
+    @logger
     def find_element(self, locator, element=None, expected_condition='presence', timeout_sec=10,
                      ignored_exceptions=None):
-        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}, locators: {locator.by, locator.value}, "
-                    F"expected condition: {expected_condition}")
         element = element if element else self.driver
         wait = self.get_wait_object(element, timeout_sec, ignored_exceptions)
-        return (wait.until(
-                getattr(EC, EXPECTED_CONDITIONS_ELEMENT.get(expected_condition))(locator),
-                message=f"Can't find element by locator {locator}"))
+        expected_function = getattr(EC, EXPECTED_CONDITIONS_ELEMENT.get(expected_condition))(locator)
+        return wait.until(expected_function, message=f"Can't find element by locator {locator}")
 
+    @logger
     def find_elements(self, locator, expected_condition='presence', timeout_sec=10, ignored_exceptions=None):
-        LOGGER.info(F"++++ in {inspect.currentframe().f_code.co_name}, locators: {locator.by, locator.value}, "
-                    F"expected condition: {expected_condition}")
         wait = self.get_wait_object(self.driver, timeout_sec, ignored_exceptions)
-        return wait.until(
-            getattr(EC, EXPECTED_CONDITIONS_ELEMENTS.get(expected_condition))(locator),
-            message=f"Can't find elements by locator {locator}")
+        expected_object =  getattr(EC, EXPECTED_CONDITIONS_ELEMENTS.get(expected_condition))(locator)
+        return wait.until(expected_object, message=f"Can't find elements by locator {locator}")
 
     def click_on(self, locator, timeout_sec=10):
         self.find_element(locator, expected_condition='clickable', timeout_sec=timeout_sec).click()
@@ -55,11 +74,10 @@ class BasePage(object):
     def navigate_to(self, url=None, page_displayed=None):
         for uri in self.base_url:
             uri = F"{uri}/{url}" if url else uri
-            wait = WebDriverWait(self.driver, 15)
+            wait = WebDriverWait(self.driver, 20)
             self.driver.get(uri)
             try:
-                # wait.until(EC.element_to_be_clickable((By.XPATH, "//span[contains(text(), 'Have more questions?')]")))
-                wait.until(EC.element_to_be_clickable(MainPageLocators.get_questions))
+                wait.until(EC.element_to_be_clickable(MainPageLocators.get_questions_by_xpath))
             except TimeoutException as e:
                 LOGGER.info(F"**** Page Display Error when navigate to: {uri}, Error: {e}")
 
@@ -96,25 +114,4 @@ class BasePage(object):
 
         return wrapper
 
-    @classmethod
-    def logger(cls, func):
-        """
-        A decorator function to log information about function calls and their results.
-        """
-        @wraps(func)
-        def wrapper(*args, **kwargs):
-            """
-            The wrapper function that logs function calls and their results.
-            """
-            LOGGER.info(f"\n++++ Running {func.__name__} with args: {args}, kwargs: {kwargs}")
-            try:
-                result = func(*args, **kwargs)
-                LOGGER.info(f"++++ Finished {func.__name__} with result: {result}\n")
 
-            except Exception as e:
-                LOGGER.error(f"++++ Error occurred in {func.__name__}: {e}\n")
-                raise
-
-            else:
-                return result
-        return wrapper
