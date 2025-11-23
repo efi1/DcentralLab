@@ -55,21 +55,21 @@ class BasePage(object):
         return WebDriverWait(driver_or_element, timeout)
 
     @logger
-    def find_element(self, locator, element=None, expected_condition='presence', timeout_sec=10,
-                     ignored_exceptions=None):
+    def search_element(self, locator, element=None, expected_condition='presence', timeout_sec=10,
+                       ignored_exceptions=None):
         element = element if element else self.driver
         wait = self.get_wait_object(element, timeout_sec, ignored_exceptions)
         expected_function = getattr(EC, EXPECTED_CONDITIONS_ELEMENT.get(expected_condition))(locator)
         return wait.until(expected_function, message=f"Can't find element by locator {locator}")
 
     @logger
-    def find_elements(self, locator, expected_condition='presence', timeout_sec=10, ignored_exceptions=None):
+    def search_elements(self, locator, expected_condition='presence', timeout_sec=10, ignored_exceptions=None):
         wait = self.get_wait_object(self.driver, timeout_sec, ignored_exceptions)
         expected_object =  getattr(EC, EXPECTED_CONDITIONS_ELEMENTS.get(expected_condition))(locator)
         return wait.until(expected_object, message=f"Can't find elements by locator {locator}")
 
     def click_on(self, locator, timeout_sec=10):
-        self.find_element(locator, expected_condition='clickable', timeout_sec=timeout_sec).click()
+        self.search_element(locator, expected_condition='clickable', timeout_sec=timeout_sec).click()
 
     def navigate_to(self, url=None, page_displayed=None):
         for uri in self.base_url:

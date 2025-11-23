@@ -21,8 +21,8 @@ class StagingPage(BasePage, Staging):
 
         def wrapper(self, *args, **kwargs):
             try:
-                is_container = self.find_element(self.locators.is_container_message, timeout_sec=2,
-                                                 expected_condition='clickable')
+                is_container = self.search_element(self.locators.is_container_message, timeout_sec=2,
+                                                   expected_condition='clickable')
                 is_container.click()
             except (TimeoutException, EC.StaleElementReferenceException) as e:
                 return func(self, *args, **kwargs)
@@ -42,10 +42,10 @@ class StagingPage(BasePage, Staging):
     def get_listbox(self) -> list:
         """ get all listbox elements"""
         try:
-            listbox = self.find_elements(self.find_locator, timeout_sec=2)
+            listbox = self.search_elements(self.find_locator, timeout_sec=2)
         except TimeoutException:
             self.open_listbox
-            listbox = self.find_elements(self.find_locator, timeout_sec=2)
+            listbox = self.search_elements(self.find_locator, timeout_sec=2)
         return listbox
 
     @suppress_container_message
@@ -74,4 +74,4 @@ class StagingPage(BasePage, Staging):
     @BasePage.logger
     def get_selected_item(self) -> str:
         """ get the selected item name """
-        return self.find_element(self.locators.get_selected_item).text
+        return self.search_element(self.locators.get_selected_item).text
